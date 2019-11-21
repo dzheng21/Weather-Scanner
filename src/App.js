@@ -16,6 +16,10 @@ class App extends React.Component {
     country: undefined,
     humidity: undefined,
     description: undefined,
+    wind: undefined,
+    long: undefined,
+    lat: undefined,
+    icon: undefined,
     error: undefined
   }
 
@@ -34,14 +38,25 @@ class App extends React.Component {
     const response = await api_call.json();
     console.log(response);
     if(city && country){
-      this.setState({
-        temperature: response.main.temp,
-        city: response.name,
-        country: response.sys.country,
-        humidity: response.main.humidity,
-        description: response.weather[0].description,
-        error: ""
-      })
+
+      try{
+        this.setState({
+          temperature: response.main.temp,
+          city: response.name,
+          country: response.sys.country,
+          humidity: response.main.humidity,
+          description: response.weather[0].description,
+          wind: response.wind.speed,
+          long: response.coord.lon,
+          lat: response.coord.lat,
+          error: ""
+        })
+      }
+      catch(TypeError){
+        this.setState({
+          error: "Please input valid search values..."
+        })
+      }
     }else{
       this.setState({
         error: "Please input search values..."
@@ -74,6 +89,9 @@ class App extends React.Component {
                     city={this.state.city}
                     country={this.state.country}
                     humidity={this.state.humidity}
+                    wind={this.state.wind}
+                    long={this.state.long}
+                    lat={this.state.lat}
                     description={this.state.description}
                     error={this.state.error}
                   />
